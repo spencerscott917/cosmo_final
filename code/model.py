@@ -1,7 +1,8 @@
 import numpy as np
 from astropy.io import fits
 
-fname='/home/spencerscott/classes/cosmo/final_proj/data/IN_PAPER/GGL003400-094434_1/GGL003400-0944.fits'
+fname='/home/spencerscott/classes/cosmo/final_proj/data/IN_PAPER/GGL223150+002627_1/GGL223151+0026.fits'
+obj_id = 'id13'
 dat = fits.open(fname)
 im = dat[0].data
 delta = float(dat[0].header['DETLA'])
@@ -47,6 +48,7 @@ def det_to_gal_coords(dat, theta, i, gamma, delta):
 
 
 def lens_model(xi, eta, xi0, eta0, theta, i, gamma, vmax, v0, rt):
+    """Combining above transforms to give full model that runs through MCMC"""
     mat = np.array([xi-xi0,eta-eta0])
 
     x,y = det_to_gal_coords(mat, theta, i, gamma, delta)

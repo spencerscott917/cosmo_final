@@ -6,14 +6,21 @@ import time
 from multiprocessing import Pool
 from model import *
 
+
+base_dir ='/home/spencerscott/classes/cosmo/final_proj/data/IN_PAPER/'
+folder_names = ['GGL003400-094434_1',  'GGL020928-100653_1',  'GGL100049+044553_1',  'GGL110920-000655_1',  'GGL130200-065613_1',  'GGL214705-012125_1',  'GGL231916-223942_1',
+'GGL003402-094532_1',  'GGL030700''-071242_1',  'GGL103257+120139_1',  'GGL120439+014609_1',  'GGL134940+110621_1',  'GGL221230-241804_1',  'GGL235410+002339_1',
+'GGL003402-094532_2',  'GGL100035+032254_1',  'GGL103439+110321_1',  'GGL120439+014609_2',  'GGL140313+140843_1',  'GGL223150+002627_1',  'GGL235410+002339_2'] 
+
+
+
 # multiprocessing params
 ncpus = 12 # number of processes to spawn
 
 # mcmc params
 ndim = 8 # number of free parameters
 nwalkers = 300 
-nsteps = 5000 
-
+nsteps = 10000 
 
 # free parameters in SAM for testing
 xi0_guess = np.mean(xi)
@@ -52,8 +59,8 @@ def log_prior(params):
        (theta <= 6.28) and 
        (0 <= i) and 
        (i <= 6.28) and 
-       (-0.03 <= gamma) and 
-       (gamma <= 0.03) and
+    #    (-0.03 <= gamma) and 
+    #    (gamma <= 0.03) and
        (0 <= vmax) and 
        (vmax <= 5e3) and
        (0 <= v0) and 
@@ -71,8 +78,8 @@ def log_probability(params, xi, eta, im, yerr):
     return lp + log_likelihood(params, xi, eta, im, yerr)
 
 
-def mcmc():
-    filename = "tutorial.h5"
+def mcmc(obj_name):
+    filename = f"chains/chains_{obj_name}.h5"
     backend = emcee.backends.HDFBackend(filename)
     backend.reset(nwalkers, ndim)
     p0 = [xi0_guess, eta0_guess, theta_guess, i_guess, gamma_guess, vmax_guess, v0_guess, rt_guess]
@@ -103,7 +110,7 @@ def mcmc():
 
 
 if __name__ == '__main__':
-    mcmc()
+    mcmc(obj_id)
     # # commented out test code 
     # smf = calc_sam(sn_reheat_fraction, sn_eject_fraction, kinetic_coupling_to_cold_gas,
     #                alpha, f_ICL)
